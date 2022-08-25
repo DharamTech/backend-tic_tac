@@ -1,12 +1,20 @@
+import dotenv from "dotenv";
+//config
+dotenv.config();
 import express from "express";
 import cors from "cors";
 import { StreamChat } from "stream-chat";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
+
+const port = process.env.PORT || '5000'
+
 const app = express();
 
 app.use(cors());
+
 app.use(express.json());
+
 const api_key = "4zds8sfcsjrw";
 const api_secret =
   "uwtqmt4zu87w2b3hqpqjr23pz2gv2m95rpanksqmfdnskycje32py5b7dtspm2ve";
@@ -50,6 +58,9 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on port 3001");
+app.listen(port, () => {
+  console.log(`Server is running : ${port}`);
 });
+
+
+
