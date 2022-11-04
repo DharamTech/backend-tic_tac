@@ -4,7 +4,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { StreamChat } from "stream-chat";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4, validate } from "uuid";
 import bcrypt from "bcrypt";
 
 const port = process.env.PORT || '5000'
@@ -15,14 +15,24 @@ app.use(cors());
 
 app.use(express.json());
 
-const api_key = "2p4hhujapvun";
+const api_key = "k7zx8q6n8m7z";
 const api_secret =
-  "7ybeygaz2nc9qpkzaw23k3w6mvezpzrun4zzkxfgmkkr8zc3dxkbafpf4n2b8gmx";
+  "n2ydjdmwpx98sst9xfsv68tqdtjqbj2jkjyukds8wxddzgkzjtjc3gnfq3zqmf3y";
 const serverClient = StreamChat.getInstance(api_key, api_secret);
 
 app.post("/signup", async (req, res) => {
   try {
     const { firstName, lastName, username, password } = req.body;
+
+    // Validate the username
+    let usernameNotTaken = await validateUsername(req.body.username);
+    if (!usernameNotTaken) {
+      return res.status(400).json({
+        message: `Username is already taken.`,
+        success: false
+      });
+    }
+
     const userId = uuidv4();
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = serverClient.createToken(userId);
