@@ -23,16 +23,6 @@ const serverClient = StreamChat.getInstance(api_key, api_secret);
 app.post("/signup", async (req, res) => {
   try {
     const { firstName, lastName, username, password } = req.body;
-
-    // Validate the username
-    let usernameNotTaken = await validateUsername(req.body.username);
-    if (!usernameNotTaken) {
-      return res.status(400).json({
-        message: `Username is already taken.`,
-        success: false
-      });
-    }
-
     const userId = uuidv4();
     const hashedPassword = await bcrypt.hash(password, 10);
     const token = serverClient.createToken(userId);
